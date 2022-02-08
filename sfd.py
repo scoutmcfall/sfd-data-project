@@ -11,43 +11,43 @@ import pprint
 #         print(num)
 
 #get a list of unique response codes to use as column headers
-with open("/home/hackbright/src/practice/address_results - Sheet2 (1).csv") as categories:
-    cats = categories.readlines()
-    catlst = []
-    for line in cats:
-        codes = line.split(",")
-        for code in codes:
-            inner_code = code.split(",")
-            for response in inner_code:
-                if response not in catlst:
-                    catlst.append(code)
-                    catlst.append("\n")
+# with open("/home/hackbright/src/practice/address_results - Sheet2 (1).csv") as categories:
+#     cats = categories.readlines()
+#     catlst = []
+#     for line in cats:
+#         codes = line.split(",")
+#         for code in codes:
+#             inner_code = code.split(",")
+#             for response in inner_code:
+#                 if response not in catlst:
+#                     catlst.append(code)
+#                     catlst.append("\n")
     
 # f = open('unique_codes.csv', 'w')
 # for code in catlst:
 #     f.write(code)
 # f.close()
 
-with open("/home/hackbright/src/practice/unique_codes.csv", 'r') as codes:
-    formatted_codes = []
-    codelst = codes.readlines()
-    for code in codelst:
-        code.replace("'", "")
-    # print(codelst)
+# with open("/home/hackbright/src/practice/unique_codes.csv", 'r') as codes:
+#     formatted_codes = []
+#     codelst = codes.readlines()
+#     for code in codelst:
+#         code.replace("'", "")
+#     # print(codelst)
 
-f = open('formatted_codes.csv', 'w')
-for code in codelst:
-    f.write(code)
-f.close()
-
-with open("./add_to_check.csv", 'r') as addresses:
+# f = open('formatted_codes.csv', 'w')
+# for code in codelst:
+#     f.write(code)
+# f.close()
+#******************************************************
+with open("/home/hackbright/src/sfd-data-project/add_to_check.csv", 'r') as addresses:
     adds = addresses.readlines()
     str_adds = []
     for line in adds:
         chars = line.split("\n")
         str_adds.append(""+chars[0]+"")
 
-with open("./Seattle_Real_Time_Fire_911_Calls.csv", 'r') as sfd_report:
+with open("/home/hackbright/src/Seattle_Real_Time_Fire_911_Calls.csv", 'r') as sfd_report:
     data = sfd_report.readlines()
     responses = []
     dates = []
@@ -61,21 +61,23 @@ def search(data, add):
             dates.append(datetimes[0][-4:])
     result = Counter(responses)
     # pprint.pprint(result)
-    dates.sort()
+    # dates.sort() 
     dateresult = Counter(dates)
     # pprint.pprint(dateresult)
-    return str(result)
+    return str(dateresult)
 
 total = []
+# print(search(data, "2519 1st Av"))
+#THERES SOMETHING HAPPENING HERE THAT'S MAKING THE NUMBERS HUGE WHAT IS GOING ON
 for add in str_adds:
     total.append(add)
     res = search(data, add)
-    res.replace("Counter", "")
     total.append(res)
     total.append("\n")
+print(total)
 
 
-# f = open('address_results.csv', 'w')
+# f = open('unsorted_date_results_by_address.csv', 'w')
 # for res in total:
 #     f.write(res)
 # f.close()
