@@ -40,41 +40,63 @@ import pprint
 #     f.write(code)
 # f.close()
 #******************************************************
+
 with open("/home/hackbright/src/sfd-data-project/add_to_check.csv", 'r') as addresses:
     adds = addresses.readlines()
     str_adds = []
+   
     for line in adds:
         chars = line.split("\n")
         str_adds.append(""+chars[0]+"")
 
+
 with open("/home/hackbright/src/Seattle_Real_Time_Fire_911_Calls.csv", 'r') as sfd_report:
-    data = sfd_report.readlines()
+    sfd_data = sfd_report.readlines()
+   
+
+def code_search(call_data, add):   
+    print("code search: " + add)
     responses = []
-    dates = []
-    
-def search(data, add):    
-    for line in data:
-        if add in line:
-            columns = line.split(",")    
+    for record in call_data:
+        if add in record:
+            columns = record.split(",")
+            
             responses.append(columns[1])
+    result = Counter(responses)
+    pprint.pprint(result)
+    print("-----------------------------")
+    print("\n")
+    return
+
+def date_search(call_data, add):   
+    print("date search: " + add)
+    dates = []
+    for record in call_data:
+        if add in record:
+            columns = record.split(",")
             datetimes = columns[2].split(" ")
             dates.append(datetimes[0][-4:])
-    result = Counter(responses)
-    # pprint.pprint(result)
-    # dates.sort() 
     dateresult = Counter(dates)
-    # pprint.pprint(dateresult)
-    return str(dateresult)
+    pprint.pprint(dateresult)
+    print("-----------------------------")
+    print("\n")
+    return
+
+# print(" test  ")
+# search(sfd_data, '2519 1st Av')
 
 total = []
-# print(search(data, "2519 1st Av"))
-#THERES SOMETHING HAPPENING HERE THAT'S MAKING THE NUMBERS HUGE WHAT IS GOING ON
-for add in str_adds:
-    total.append(add)
-    res = search(data, add)
-    total.append(res)
-    total.append("\n")
-print(total)
+
+for val in str_adds:
+    date_search(sfd_data, val)
+    print("\n")
+    code_search(sfd_data, val)
+    print("______________________")
+#     total.append(add)
+#     res = search(data, add)
+#     total.append(res)
+#     total.append("\n")
+# print(total)
 
 
 # f = open('unsorted_date_results_by_address.csv', 'w')
@@ -83,17 +105,8 @@ print(total)
 # f.close()
 
 
-
-
 # def get_calls_by_address():
 #     for record in data:
 #         if "903 Union" in record:
 #             print(record)
 
-
-# def call_api():
-#     res = requests.get("https://data.seattle.gov/resource/kzjm-xkqj.json")
-#     res2 = res.json()
-#     for record in res2:
-#         if "903 Union" in record:
-#             print(record)
