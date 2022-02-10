@@ -54,8 +54,8 @@ with open("/home/hackbright/src/Seattle_Real_Time_Fire_911_Calls.csv", 'r') as s
     sfd_data = sfd_report.readlines()
    
 
-def code_search(call_data, add):   
-    print("code search: " + add)
+def code_search(call_data, add):  
+    # print("code search: " + add)
     responses = []
     for record in call_data:
         if add in record:
@@ -63,46 +63,85 @@ def code_search(call_data, add):
             
             responses.append(columns[1])
     result = Counter(responses)
-    pprint.pprint(result)
-    print("-----------------------------")
-    print("\n")
-    return
+    # pprint.pprint(result)
+    # print("-----------------------------")
+    # print("\n")
+    return str(result)
 
 def date_search(call_data, add):   
-    print("date search: " + add)
+    # print("date search: " + add)
     dates = []
+    year_counts = {}
     for record in call_data:
         if add in record:
             columns = record.split(",")
             datetimes = columns[2].split(" ")
             dates.append(datetimes[0][-4:])
-    dateresult = Counter(dates)
-    pprint.pprint(dateresult)
-    print("-----------------------------")
-    print("\n")
-    return
+    #instead of using counter, which sorts by count instead of key
+    #i'll populate my year counts dict using .get()
+    for year in dates:
+        year_counts[year] = year_counts.get(year, 0)+1
+    #now sort the dictionary by key
+    year_counts_keys = year_counts.items()
+    sorted_keys = sorted(year_counts_keys)
+    print(sorted_keys)
+    
+    #dateresult = Counter(dates)
+    #return str(dateresult)
+    #have to make it a string so it can be written to a file
+    return str(sorted_keys)
 
 # print(" test  ")
-# search(sfd_data, '2519 1st Av')
+# date_search(sfd_data, '1601 2nd Av')
 
-total = []
+
+codes_total = []
+dates_total = []
 
 for val in str_adds:
-    date_search(sfd_data, val)
-    print("\n")
-    code_search(sfd_data, val)
-    print("______________________")
-#     total.append(add)
-#     res = search(data, add)
-#     total.append(res)
-#     total.append("\n")
-# print(total)
+    dates_total.append("\n")
+    dates_total.append(val)
+    dates_total.append(date_search(sfd_data, val))
+  
+#     codes_total.append("\n")
+#     codes_total.append(val)
+#     codes_total.append(code_search(sfd_data, val))
+  
+#write sorted date list from date_search specifically to a file
+f = open("sorted_dates_by_year_address.csv", "w")
+for dres in dates_total:
+    f.write(dres)
+f.close()
 
-
-# f = open('unsorted_date_results_by_address.csv', 'w')
-# for res in total:
+# #write all the codes/dates results to a file
+# f = open('date_and_code_results_by_address.csv', 'w')
+# for res in codes_total:
+#     # res_st = str(res)
 #     f.write(res)
+# for dres in dates_total:
+#     # dres_st = str(dres)
+#     f.write(dres)
 # f.close()
+
+#get all dates in a doc so i can sort them
+# f = open('date_to_sort.csv', 'w')
+# for dres in dates_total:
+#     # dres_st = str(dres)
+#     f.write(dres)
+# f.close()
+
+# with open("/home/hackbright/src/sfd-data-project/date_to_sort.csv", "r") as calls_by_year:
+#     call_info = calls_by_year.readlines()
+#     address_calls_per_year = {}
+#     for line in call_info:
+#         linevals = line.split("Counter")
+#         #at this point linevals[-1] is an unsorted dictionary of year:# call values
+#         #I want to sort the years in order and then store the whole thing as a alue keyed to the address        
+        
+#         address_calls_per_year[linevals[0]] = linevals[-1]
+# #print(address_calls_per_year)
+
+
 
 
 # def get_calls_by_address():
