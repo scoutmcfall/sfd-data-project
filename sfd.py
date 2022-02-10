@@ -53,20 +53,41 @@ with open("/home/hackbright/src/sfd-data-project/add_to_check.csv", 'r') as addr
 with open("/home/hackbright/src/Seattle_Real_Time_Fire_911_Calls.csv", 'r') as sfd_report:
     sfd_data = sfd_report.readlines()
    
+with open("/home/hackbright/src/sfd-data-project/unique_codes.csv") as unique_codes:
+    codes = unique_codes.readlines()
+    codelst = []
+
+    for line in codes:
+        fmt = line.replace("'\n", "")
+        codelst.append(fmt)
+#now codelst is a list of string containing unique call codes that i can use in my code search
 
 def code_search(call_data, add):  
     # print("code search: " + add)
     responses = []
+    code_count_dict = {}
     for record in call_data:
         if add in record:
             columns = record.split(",")
             
             responses.append(columns[1])
-    result = Counter(responses)
+    #make a list of strings: unique codes to serve as keys for my code dictionary
+    #construct dictionary where all the keys are the unique codes
+    for code in codelst:
+        code_count_dict[code] = code_count_dict.get(code, 0)
+    # print(code_count_dict)
+    #populate my dictionary by searching for each code in my responses list instead of using counter
+    for response in responses:
+        code_count_dict[response] = code_count_dict.get(response, 0)+1
+    # print(code_count_dict.values())
+
+
+    
+    # result = Counter(responses)
     # pprint.pprint(result)
     # print("-----------------------------")
     # print("\n")
-    return str(result)
+    return str(code_count_dict.values())
 
 def date_search(call_data, add):   
     # print("date search: " + add)
@@ -105,19 +126,19 @@ codes_total = []
 dates_total = []
 
 for val in str_adds:
-    dates_total.append("\n")
-    dates_total.append(val)
-    #now i only need the list of values for each address because 
-    # the keys are years which i already have as column headers
-    dates_total.append(date_search(sfd_data, val))
+    # dates_total.append("\n")
+    # dates_total.append(val)
+    # #now i only need the list of values for each address because 
+    # # the keys are years which i already have as column headers
+    # dates_total.append(date_search(sfd_data, val))
   
-#     codes_total.append("\n")
-#     codes_total.append(val)
-#     codes_total.append(code_search(sfd_data, val))
+    codes_total.append("\n")
+    codes_total.append(val)
+    codes_total.append(code_search(sfd_data, val))
   
 #write sorted date list from date_search specifically to a file
-f = open("sorted_datecounts_by_address.csv", "w")
-for dres in dates_total:
+f = open("vals_sorted_codes_by_address.csv", "w")
+for dres in codes_total:
     f.write(dres)
 f.close()
 
