@@ -87,7 +87,6 @@ def date_search(call_data, add):
     for date in dates:
         year_counts[date] = year_counts.get(date, 0)+1
     
-    
     # #now sort the dictionary by key
     # year_counts_keys = year_counts.items()
     # sorted_keys = sorted(year_counts_keys)
@@ -96,7 +95,7 @@ def date_search(call_data, add):
     #dateresult = Counter(dates)
     #return str(dateresult)
     #have to make it a string so it can be written to a file
-    return str(year_counts)
+    return str(year_counts.values())
 
 # print(" test  ")
 # date_search(sfd_data, '1601 2nd Av')
@@ -108,6 +107,8 @@ dates_total = []
 for val in str_adds:
     dates_total.append("\n")
     dates_total.append(val)
+    #now i only need the list of values for each address because 
+    # the keys are years which i already have as column headers
     dates_total.append(date_search(sfd_data, val))
   
 #     codes_total.append("\n")
@@ -115,7 +116,7 @@ for val in str_adds:
 #     codes_total.append(code_search(sfd_data, val))
   
 #write sorted date list from date_search specifically to a file
-f = open("sorted_dates_by_year_address.csv", "w")
+f = open("sorted_datecounts_by_address.csv", "w")
 for dres in dates_total:
     f.write(dres)
 f.close()
