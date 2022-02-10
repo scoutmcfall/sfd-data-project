@@ -79,17 +79,24 @@ def date_search(call_data, add):
             dates.append(datetimes[0][-4:])
     #instead of using counter, which sorts by count instead of key
     #i'll populate my year counts dict using .get()
-    for year in dates:
-        year_counts[year] = year_counts.get(year, 0)+1
-    #now sort the dictionary by key
-    year_counts_keys = year_counts.items()
-    sorted_keys = sorted(year_counts_keys)
-    print(sorted_keys)
+    year_rang = list(range(2003,2023))
+
+    for year in year_rang:
+        year_counts[str(year)] = year_counts.get(year, 0)
+    #now i have a dict where keys are the years from 2003-2022
+    for date in dates:
+        year_counts[date] = year_counts.get(date, 0)+1
+    
+    
+    # #now sort the dictionary by key
+    # year_counts_keys = year_counts.items()
+    # sorted_keys = sorted(year_counts_keys)
+    # print(sorted_keys)
     
     #dateresult = Counter(dates)
     #return str(dateresult)
     #have to make it a string so it can be written to a file
-    return str(sorted_keys)
+    return str(year_counts)
 
 # print(" test  ")
 # date_search(sfd_data, '1601 2nd Av')
